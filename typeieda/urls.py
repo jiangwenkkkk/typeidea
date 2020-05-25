@@ -15,7 +15,51 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url, include
+from django.views.generic import TemplateView
+
+from blog.views import (IndexView, CategoryView, TagView,
+                        PostDetailView, SearchView, post_detail, AuthorView
+                        )
+
+from config.views import (LinkListView,)
+
+from comment.views import CommentView
+
+from django.contrib.sitemaps import views as sitemap_views
+from blog.rss import LatestPostFeed
+from blog.sitemap import PostSitemap
+
+from config.views import links
+from .customer_site import custom_site
+from blog.apis import post_list, PostList
+
+from rest_framework.routers import DefaultRouter
+from blog.apis import PostViewSet
+
+router = DefaultRouter()
+router.register(r'post', PostViewSet, basename='api-post')
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    url(r'^$', IndexView.as_view(),name='index'),
+    url(r'^category/(?P<category_id>\d+)/$', CategoryView.as_view(), name='category-list'),
+    url('^tag/(?P<tag_id>\d+).html$', TagView.as_view(),name='tag-list'),
+    #url(r'^post/(?P<post_id>\d+).html$', post_detail, name='post-detail'),
+    url(r'^post/(?P<post_id>\d+).html$', PostDetailView.as_view(), name='post-detail'),
+ #   url(r'^links/$', links, name='links'),
+    url(r'super_admin/', admin.site.urls, name='super-admin'),
+    url(r'admin/', custom_site.urls, name='admin'),
+    url(r'about/', TemplateView.as_view(template_name='about.html')),
+    url(r'^search/$', SearchView.as_view() , name='search'),
+    url(r'^author/(?P<owner_id>\d+)$', AuthorView.as_view(), name='author'),
+    url(r'^links/$', LinkListView.as_view(), name='links'),
+    url(r'^comment/$', CommentView.as_view(), name='comment'),
+    url(r'^rss|feed/', LatestPostFeed(), name='rss'),
+    url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts':PostSitemap}}),
+    url(r'^api/post/', PostList.as_view(), name='post-list'),
+  #  url(r'^api/post/', post_list, name='post-list'),
+    url(r'^api/', include(router.urls, namespace="api")),
+
+
 ]

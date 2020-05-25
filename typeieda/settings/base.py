@@ -24,6 +24,7 @@ SECRET_KEY = '(bdr6+e^0na-kobgkb-k$5qswy80s%62p-%0*pu9x&v$j4ftzs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -31,9 +32,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 'blog',
+    'typeieda',
+    'blog',
     'config',
-    # 'comment',
+    'comment',
+    'rest_framework',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +47,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'blog.middleware.user_id.UserIDMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,11 +59,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'typeieda.urls'
+THEME = 'bootstrap'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'themes', THEME, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,4 +129,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+#
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'themes', THEME, "static"),
+]
+
