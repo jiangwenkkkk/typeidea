@@ -35,11 +35,11 @@ from .customer_site import custom_site
 from blog.apis import post_list, PostList
 
 from rest_framework.routers import DefaultRouter
-from blog.apis import PostViewSet
+from blog.apis import PostViewSet, CategoryViewSet
 
 router = DefaultRouter()
 router.register(r'post', PostViewSet, basename='api-post')
-
+router.register(r'categories', CategoryViewSet)
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(),name='index'),
@@ -59,7 +59,7 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts':PostSitemap}}),
     url(r'^api/post/', PostList.as_view(), name='post-list'),
   #  url(r'^api/post/', post_list, name='post-list'),
-    url(r'^api/', include(router.urls, namespace="api")),
+    url(r'^api/', include(router.urls)),
 
 
 ]

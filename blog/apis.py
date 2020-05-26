@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import serializers
 
-from .models import Post
+from .models import Post, Category, Tag
 from .serializers import PostSerializer
 
 from .models import Post, Category
