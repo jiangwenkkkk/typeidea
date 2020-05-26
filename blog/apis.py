@@ -14,8 +14,8 @@ from .serializers import (
 )
 
 @api_view()
-def post_list(request):
-    posts = Post.objects.filter(status=Post.STATUS_NORMAL)
+def post_list(request, post_id):
+    posts = Post.objects.filter(status=Post.STATUS_NORMAL, id=post_id)
     post_serializers = PostSerializer(posts, many=True)
     return Response(post_serializers.data)
 
@@ -23,20 +23,24 @@ class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.filter(status=Post.STATUS_NORMAL)
     serializer_class = PostSerializer
 
-class PostViewSet(viewsets.ReadOnlyModelViewSet):
-    """ 提供文章接口 """
+class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=Post.STATUS_NORMAL)
 
-    def retrieve(self, request, *args, **kwargs):
-        self.serializer_class = PostDetailSerializer
-        return super().retrieve(request, *args, **kwargs)
+# class PostViewSet(viewsets.ReadOnlyModelViewSet):
+#     """ 提供文章接口 """
+#     serializer_class = PostSerializer
+#     queryset = Post.objects.filter(status=Post.STATUS_NORMAL)
 
-    def filter_queryset(self, queryset):
-        category_id = self.request.query_params.get('category')
-        if category_id:
-            queryset = queryset.filter(category_id=category_id)
-        return queryset
+    # def retrieve(self, request, *args, **kwargs):
+    #     self.serializer_class = PostDetailSerializer
+    #     return super().retrieve(request, *args, **kwargs)
+
+    # def filter_queryset(self, queryset):
+    #     category_id = self.request.query_params.get('category')
+    #     if category_id:
+    #         queryset = queryset.filter(category_id=category_id)
+    #     return queryset
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):

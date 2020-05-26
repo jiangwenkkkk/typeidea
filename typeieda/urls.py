@@ -37,6 +37,9 @@ from blog.apis import post_list, PostList
 from rest_framework.routers import DefaultRouter
 from blog.apis import PostViewSet, CategoryViewSet
 
+from rest_framework.documentation import include_docs_urls
+from rest_framework.schemas.coreapi import AutoSchema
+
 router = DefaultRouter()
 router.register(r'post', PostViewSet, basename='api-post')
 router.register(r'categories', CategoryViewSet)
@@ -57,9 +60,10 @@ urlpatterns = [
     url(r'^comment/$', CommentView.as_view(), name='comment'),
     url(r'^rss|feed/', LatestPostFeed(), name='rss'),
     url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts':PostSitemap}}),
-    url(r'^api/post/', PostList.as_view(), name='post-list'),
-  #  url(r'^api/post/', post_list, name='post-list'),
-    url(r'^api/', include(router.urls)),
+    #url(r'^api/post/', PostList.as_view(), name='post-list'),
+    url(r'^api/post/(?P<post_id>\d+)', post_list, name='post-list'),
+ #   url(r'^api/(?P<post_id>\d+)', include(router.urls)),
+#    url(r'^api/docs/', include_docs_urls(title='typeidea apis')),
 
 
 ]
